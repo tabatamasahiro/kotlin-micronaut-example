@@ -38,6 +38,10 @@ dependencies {
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
     runtimeOnly("com.h2database:h2")
     compileOnly("jakarta.persistence:jakarta.persistence-api:2.2.2")
+    // https://mvnrepository.com/artifact/io.micronaut.servlet/micronaut-http-server-tomcat
+    compile group: 'io.micronaut.servlet', name: 'micronaut-http-server-tomcat', version: '2.0.0'
+    // https://mvnrepository.com/artifact/io.micronaut.servlet/micronaut-servlet-engine
+    compile group: 'io.micronaut.servlet', name: 'micronaut-servlet-engine', version: '2.0.0'
 }
 
 mainClassName = "com.example.tabata.ApplicationKt"
