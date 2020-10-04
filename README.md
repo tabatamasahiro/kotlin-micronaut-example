@@ -1,22 +1,11 @@
-## Feature data-jdbc documentation
+## 課題
 
-- [Micronaut Micronaut Data JDBC documentation](https://micronaut-projects.github.io/micronaut-data/latest/guide/index.html#jdbc)
-
-## Feature views-thymeleaf documentation
-
-- [Micronaut Thymeleaf views documentation](https://micronaut-projects.github.io/micronaut-views/latest/guide/index.html#thymeleaf)
-
-- [https://www.thymeleaf.org/](https://www.thymeleaf.org/)
-
-## Feature http-client documentation
-
-- [Micronaut Micronaut HTTP Client documentation](https://docs.micronaut.io/latest/guide/index.html#httpClient)
-
-## Feature tomcat-server documentation
-
-- [Micronaut Tomcat Server documentation](https://micronaut-projects.github.io/micronaut-servlet/1.0.x/guide/index.html#tomcat)
-
-## Feature jdbc-hikari documentation
-
-- [Micronaut Hikari JDBC Connection Pool documentation](https://micronaut-projects.github.io/micronaut-sql/latest/guide/index.html#jdbc)
-
+KotlinとMicronautを利用し、書籍管理システムの構築をお願いします。
+- 書籍には著者の属性があり、書籍と著者の情報をRDBに登録・変更・削除・検索できる
+- 著者が決まっているもののタイトルが未定の場合がある
+- 出版社はまだ出版されていない書籍に対して、タイトルを何度でも変更できる
+- 出版社はまだ出版されていない書籍に対して、出版日を変更できる。ただし出版日を過去の日付には変更できない
+- 著者に紐づく本を取得できる
+結果はGitHubにアップし、プロジェクトのURLを送付頂けますでしょうか。
+出来る限りテストも作成お願いします。
+コミットは一つにまとめず適切な単位で作成ください。
