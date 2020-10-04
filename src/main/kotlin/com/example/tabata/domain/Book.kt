@@ -11,10 +11,11 @@ data class Book(
         @AutoPopulated
         var isbn: UUID?,
         val authorName: String,
-        val title: String,
+        val title: String?,
         val release: Release = Release.NOT_DONE,
-        val datePublication: LocalDate
+        val datePublication: LocalDate?
 ) {
+
     enum class Release {
         DONE, NOT_DONE
     }
