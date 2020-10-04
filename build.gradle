@@ -37,6 +37,7 @@ dependencies {
     runtimeOnly("ch.qos.logback:logback-classic")
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
     runtimeOnly("com.h2database:h2")
+    compileOnly("jakarta.persistence:jakarta.persistence-api:2.2.2")
 }
 
 mainClassName = "com.example.tabata.ApplicationKt"
