@@ -7,15 +7,15 @@ class BookTitle(val title: String) {
         }
     }
 
-    fun parseWithRelease(release: Book.Release): Update {
+    fun parseWithRelease(release: Release): Update {
         if (isAlready(release)) {
             return Update.NG
         }
         return Update.OK
     }
 
-    fun isAlready(release: Book.Release): Boolean {
-        return release == Book.Release.DONE
+    fun isAlready(release: Release): Boolean {
+        return release == Release.DONE
     }
 
 }

@@ -1,6 +1,5 @@
 package com.example.tabata.domain
 
-import java.lang.Exception
 import java.time.DateTimeException
 import java.time.LocalDate
 import java.time.ZoneId
@@ -18,7 +17,7 @@ class DatePublication(val yyyymmdd: String) {
         fun now() = LocalDate.now(ZoneId.of("Asia/Tokyo"))
     }
 
-    fun parseWithRelease(release: Book.Release): Update {
+    fun parseWithRelease(release: Release): Update {
 
         if (isAlready(release)) {
             // 出版済:出版日更新NG
@@ -38,8 +37,8 @@ class DatePublication(val yyyymmdd: String) {
         }
     }
 
-    fun isAlready(release: Book.Release): Boolean {
-        return release == Book.Release.DONE
+    fun isAlready(release: Release): Boolean {
+        return release == Release.DONE
     }
 
     fun undecided(): Boolean {
@@ -53,10 +52,6 @@ class DatePublication(val yyyymmdd: String) {
         } else {
             return Update.OK
         }
-    }
-
-    enum class Update {
-        OK, NG,
     }
 
 }
