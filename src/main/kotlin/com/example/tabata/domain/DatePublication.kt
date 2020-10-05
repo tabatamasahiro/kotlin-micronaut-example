@@ -17,6 +17,10 @@ class DatePublication(val yyyymmdd: String) {
         fun now() = LocalDate.now(ZoneId.of("Asia/Tokyo"))
     }
 
+    fun parseToSave(): Update {
+        return parseWithRelease(Release.NOT_ON_SALSE)
+    }
+
     fun parseWithRelease(release: Release): Update {
 
         if (isAlready(release)) {
@@ -38,7 +42,7 @@ class DatePublication(val yyyymmdd: String) {
     }
 
     fun isAlready(release: Release): Boolean {
-        return release == Release.DONE
+        return release == Release.ON_SALE
     }
 
     fun undecided(): Boolean {

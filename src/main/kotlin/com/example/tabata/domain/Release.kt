@@ -1,5 +1,5 @@
 package com.example.tabata.domain
 
 enum class Release {
-    DONE, NOT_DONE
+    ON_SALE, NOT_ON_SALSE
 }

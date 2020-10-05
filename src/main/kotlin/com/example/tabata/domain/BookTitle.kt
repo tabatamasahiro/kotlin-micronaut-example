@@ -7,6 +7,10 @@ class BookTitle(val title: String) {
         }
     }
 
+    fun parseToSave(): Update {
+        return parseWithRelease(Release.NOT_ON_SALSE)
+    }
+
     fun parseWithRelease(release: Release): Update {
         if (isAlready(release)) {
             return Update.NG
@@ -15,7 +19,7 @@ class BookTitle(val title: String) {
     }
 
     fun isAlready(release: Release): Boolean {
-        return release == Release.DONE
+        return release == Release.ON_SALE
     }
 
 }

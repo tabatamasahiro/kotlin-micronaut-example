@@ -10,7 +10,7 @@ internal class BookTitleTest {
     fun 出版済だとタイトルを変更NG() {
 
         var update =
-                BookTitle.valueToUpdate("シンニホン").parseWithRelease(Release.DONE)
+                BookTitle.valueToUpdate("シンニホン").parseWithRelease(Release.ON_SALE)
 
         assertEquals(update, Update.NG)
     }
@@ -22,9 +22,19 @@ internal class BookTitleTest {
 
         var bookTitle = BookTitle.valueToUpdate(newTitle)
 
-        var update = bookTitle.parseWithRelease(Release.NOT_DONE)
+        var update = bookTitle.parseWithRelease(Release.NOT_ON_SALSE)
 
         assertEquals(update, Update.OK)
         assertEquals(bookTitle.title, newTitle)
+    }
+
+    @Test
+    fun insert時のParse() {
+
+        val newTitle = "シンニホン"
+
+        var bookTitle = BookTitle.valueToUpdate(newTitle)
+
+        assertEquals(bookTitle.parseToSave(), Update.OK)
     }
 }

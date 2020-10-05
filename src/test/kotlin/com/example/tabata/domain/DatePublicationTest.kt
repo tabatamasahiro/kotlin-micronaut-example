@@ -44,7 +44,7 @@ internal class DatePublicationTest {
 
         var now = DatePublication.now().toString()
 
-        var parseByRelease = DatePublication.valueToUpdate(now).parseWithRelease(Release.NOT_DONE)
+        var parseByRelease = DatePublication.valueToUpdate(now).parseWithRelease(Release.NOT_ON_SALSE)
 
         assertEquals(parseByRelease, Update.OK)
     }
@@ -55,7 +55,7 @@ internal class DatePublicationTest {
         var plus1Days = DatePublication.now().plusDays(1).toString()
 
         var parseByRelease =
-                DatePublication.valueToUpdate(plus1Days).parseWithRelease(Release.NOT_DONE)
+                DatePublication.valueToUpdate(plus1Days).parseWithRelease(Release.NOT_ON_SALSE)
 
         assertEquals(parseByRelease, Update.OK)
     }
@@ -67,7 +67,7 @@ internal class DatePublicationTest {
         var minusDay1 = DatePublication.now().minusDays(1)
 
         var parseByRelease =
-                DatePublication.valueToUpdate(minusDay1.toString()).parseWithRelease(Release.NOT_DONE)
+                DatePublication.valueToUpdate(minusDay1.toString()).parseWithRelease(Release.NOT_ON_SALSE)
 
         assertEquals(parseByRelease, Update.NG)
     }
@@ -76,8 +76,14 @@ internal class DatePublicationTest {
     fun 出版済の場合はUpdateNG() {
         var now = DatePublication.now().toString()
 
-        var parseByRelease = DatePublication.valueToUpdate(now).parseWithRelease(Release.DONE)
+        var parseByRelease = DatePublication.valueToUpdate(now).parseWithRelease(Release.ON_SALE)
 
         assertEquals(parseByRelease, Update.NG)
+    }
+
+    @Test
+    fun insert時の解析() {
+        var now = DatePublication.now().toString()
+        assertEquals(DatePublication.valueToUpdate(now.toString()).parseToSave(), Update.OK)
     }
 }

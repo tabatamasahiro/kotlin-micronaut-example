@@ -20,7 +20,7 @@ class BookRepositoryTest(private val bookRepository: BookRepository) {
 
         Assertions.assertEquals("安宅和人", book.authorName)
         Assertions.assertEquals("issue driven", book.title)
-        Assertions.assertEquals(Release.DONE, book.release)
+        Assertions.assertEquals(Release.ON_SALE, book.release)
         Assertions.assertEquals(
                 LocalDate.of(2010, 11, 24),
                 book.datePublication)
@@ -40,7 +40,7 @@ class BookRepositoryTest(private val bookRepository: BookRepository) {
         var datePublication = LocalDate.of(2010, 11, 24)
 
         var newBook = Book(UUID.randomUUID(), "尾田栄一郎", null,
-                Release.NOT_DONE, datePublication)
+                Release.NOT_ON_SALSE, datePublication)
 
         bookRepository.save(newBook)
 
@@ -58,7 +58,7 @@ class BookRepositoryTest(private val bookRepository: BookRepository) {
     fun insert_出版日だけ未定() {
 
         var newBook = Book(UUID.randomUUID(), "尾田栄一郎", "ワンピース110巻",
-                Release.NOT_DONE, null)
+                Release.NOT_ON_SALSE, null)
 
         bookRepository.save(newBook)
 
@@ -111,11 +111,11 @@ class BookRepositoryTest(private val bookRepository: BookRepository) {
     @Test
     fun 著者に紐づく書籍をすべて取得() {
         var op1 = Book(UUID.randomUUID(), "尾田栄一郎", "ワンピース1巻",
-                Release.DONE, LocalDate.of(1997, 12, 29))
+                Release.ON_SALE, LocalDate.of(1997, 12, 29))
         var op20 = Book(UUID.randomUUID(), "尾田栄一郎", "ワンピース20巻",
-                Release.DONE, LocalDate.of(2001, 9, 9))
+                Release.ON_SALE, LocalDate.of(2001, 9, 9))
         var op35 = Book(UUID.randomUUID(), "尾田栄一郎", "ワンピース35巻",
-                Release.DONE, LocalDate.of(2004, 11, 9))
+                Release.ON_SALE, LocalDate.of(2004, 11, 9))
 
         bookRepository.saveAll(listOf(op1, op20, op35))
 
