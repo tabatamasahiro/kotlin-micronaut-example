@@ -66,19 +66,34 @@ internal class DatePublicationTest {
 
         var minusDay1 = DatePublication.now().minusDays(1)
 
-        var parseByRelease =
-                DatePublication.valueToUpdate(minusDay1.toString()).parseWithRelease(Release.NOT_ON_SALSE)
+        var datePublication = DatePublication.valueToUpdate(minusDay1.toString())
+
+        var parseByRelease = datePublication.parseWithRelease(Release.NOT_ON_SALSE)
 
         assertEquals(parseByRelease, Update.NG)
+        assertEquals(datePublication.errorMsg, datePublication.ERROR_MSG_003)
     }
 
     @Test
     fun 出版済の場合はUpdateNG() {
         var now = DatePublication.now().toString()
 
-        var parseByRelease = DatePublication.valueToUpdate(now).parseWithRelease(Release.ON_SALE)
+        var datePublication = DatePublication.valueToUpdate(now)
+        var parseByRelease = datePublication.parseWithRelease(Release.ON_SALE)
 
         assertEquals(parseByRelease, Update.NG)
+        assertEquals(datePublication.errorMsg, datePublication.ERROR_MSG_001)
+    }
+
+    @Test
+    fun 出版日の書式エラー() {
+        var now = DatePublication.now().toString()
+
+        var datePublication = DatePublication.valueToUpdate("2020-02-30")
+        var parseByRelease = datePublication.parseToSave()
+
+        assertEquals(parseByRelease, Update.NG)
+        assertEquals(datePublication.errorMsg, datePublication.ERROR_MSG_002)
     }
 
     @Test

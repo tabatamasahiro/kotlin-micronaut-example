@@ -5,6 +5,12 @@ import java.time.LocalDate
 import java.time.ZoneId
 
 class DatePublication(val yyyymmdd: String) {
+
+    var errorMsg: String = ""
+    val ERROR_MSG_001: String = "この書籍は出版済のため出版日は変更できません"
+    val ERROR_MSG_002: String = "出版日の入力に誤りがあります"
+    val ERROR_MSG_003: String = "出版日は過去日付に変更する事はできません"
+
     companion object {
         fun valueToUpdate(yyyymmdd: String): DatePublication {
             return DatePublication(yyyymmdd)
@@ -17,6 +23,7 @@ class DatePublication(val yyyymmdd: String) {
         fun now() = LocalDate.now(ZoneId.of("Asia/Tokyo"))
     }
 
+
     fun parseToSave(): Update {
         return parseWithRelease(Release.NOT_ON_SALSE)
     }
@@ -25,6 +32,7 @@ class DatePublication(val yyyymmdd: String) {
 
         if (isAlready(release)) {
             // 出版済:出版日更新NG
+            errorMsg = ERROR_MSG_001
             return Update.NG
         }
 
@@ -37,6 +45,7 @@ class DatePublication(val yyyymmdd: String) {
         try {
             return parse()
         } catch (e: DateTimeException) {
+            errorMsg = ERROR_MSG_002
             return Update.NG
         }
     }
@@ -52,6 +61,7 @@ class DatePublication(val yyyymmdd: String) {
     fun parse(): Update {
         if (isPastDate(LocalDate.parse(yyyymmdd))) {
             //昨日以前の日付へ変更する事はできないためNG
+            errorMsg = ERROR_MSG_003
             return Update.NG
         } else {
             return Update.OK
