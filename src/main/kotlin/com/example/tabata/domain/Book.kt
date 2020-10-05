@@ -12,7 +12,7 @@ data class Book(
         var isbn: UUID?,
         val authorName: String,
         val title: String?,
-        val release: Release = Release.NOT_DONE,
+        val release: Release = Release.NOT_ON_SALSE,
         val datePublication: LocalDate?
 ) {
 

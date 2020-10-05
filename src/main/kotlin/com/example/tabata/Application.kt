@@ -32,10 +32,10 @@ class Application(
             LOG.info("Populating data")
         }
 
-        var book1 = Book(UUID.randomUUID(), "落合陽一", "日本再興戦略", Release.DONE,
+        var book1 = Book(UUID.randomUUID(), "落合陽一", "日本再興戦略", Release.ON_SALE,
                 LocalDate.of(2018, 1, 31))
 
-        var book2 = Book(UUID.randomUUID(), "安宅和人", "issue driven", Release.DONE,
+        var book2 = Book(UUID.randomUUID(), "安宅和人", "issue driven", Release.ON_SALE,
                 LocalDate.of(2010, 11, 24))
 
         bookRepository.saveAll(listOf(book1, book2))
