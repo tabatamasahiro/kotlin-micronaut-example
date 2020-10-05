@@ -16,7 +16,4 @@ data class Book(
         val datePublication: LocalDate?
 ) {
 
-    enum class Release {
-        DONE, NOT_DONE
-    }
 }
