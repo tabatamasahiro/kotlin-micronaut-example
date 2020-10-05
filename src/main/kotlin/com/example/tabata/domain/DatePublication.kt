@@ -18,7 +18,7 @@ class DatePublication(val yyyymmdd: String) {
         fun now() = LocalDate.now(ZoneId.of("Asia/Tokyo"))
     }
 
-    fun parseByRelease(release: Book.Release): Update {
+    fun parseWithRelease(release: Book.Release): Update {
 
         if (isAlready(release)) {
             // 出版済:出版日更新NG

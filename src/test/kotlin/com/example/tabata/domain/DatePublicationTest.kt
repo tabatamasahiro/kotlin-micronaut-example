@@ -3,7 +3,6 @@ package com.example.tabata.domain
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
-import java.time.LocalDate
 
 internal class DatePublicationTest {
 
@@ -45,7 +44,7 @@ internal class DatePublicationTest {
 
         var now = DatePublication.now().toString()
 
-        var parseByRelease = DatePublication.valueToUpdate(now).parseByRelease(Book.Release.NOT_DONE)
+        var parseByRelease = DatePublication.valueToUpdate(now).parseWithRelease(Book.Release.NOT_DONE)
 
         assertEquals(parseByRelease, DatePublication.Update.OK)
     }
@@ -56,7 +55,7 @@ internal class DatePublicationTest {
         var plus1Days = DatePublication.now().plusDays(1).toString()
 
         var parseByRelease =
-                DatePublication.valueToUpdate(plus1Days).parseByRelease(Book.Release.NOT_DONE)
+                DatePublication.valueToUpdate(plus1Days).parseWithRelease(Book.Release.NOT_DONE)
 
         assertEquals(parseByRelease, DatePublication.Update.OK)
     }
@@ -68,7 +67,7 @@ internal class DatePublicationTest {
         var minusDay1 = DatePublication.now().minusDays(1)
 
         var parseByRelease =
-                DatePublication.valueToUpdate(minusDay1.toString()).parseByRelease(Book.Release.NOT_DONE)
+                DatePublication.valueToUpdate(minusDay1.toString()).parseWithRelease(Book.Release.NOT_DONE)
 
         assertEquals(parseByRelease, DatePublication.Update.NG)
     }
@@ -77,7 +76,7 @@ internal class DatePublicationTest {
     fun 出版済の場合はUpdateNG() {
         var now = DatePublication.now().toString()
 
-        var parseByRelease = DatePublication.valueToUpdate(now).parseByRelease(Book.Release.DONE)
+        var parseByRelease = DatePublication.valueToUpdate(now).parseWithRelease(Book.Release.DONE)
 
         assertEquals(parseByRelease, DatePublication.Update.NG)
     }
