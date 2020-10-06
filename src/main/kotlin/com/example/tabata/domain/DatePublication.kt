@@ -8,9 +8,9 @@ class DatePublication(val yyyymmdd: String?) {
 
     var localDate: LocalDate? = null
     var errorMsg: String = ""
-    val ERROR_MSG_001: String = "この書籍は出版済のため出版日は変更できません"
-    val ERROR_MSG_002: String = "出版日の入力に誤りがあります"
-    val ERROR_MSG_003: String = "出版日は過去日付に変更する事はできません"
+    val ERROR_MSG_001: String = "販売された書籍の出版日は変更できません"
+    val ERROR_MSG_002: String = "出版日に入力誤りがあります"
+    val ERROR_MSG_003: String = "出版日に過去日付を指定する事はできません"
 
     companion object {
         fun valueToUpdate(yyyymmdd: String?): DatePublication {
