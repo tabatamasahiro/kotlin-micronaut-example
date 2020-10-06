@@ -13,7 +13,7 @@ class BookController(val bookService: BookService) {
      * ブラウザへ返却したhome.htmlがレンダリングされた
      */
     @Get(value = "/", consumes = [MediaType.APPLICATION_FORM_URLENCODED], produces = ["text/html"])
-    fun home() = ModelAndView("home", "")
+    fun home() = ModelAndView("new_book", "")
 
     @Post("/new", consumes = [MediaType.APPLICATION_FORM_URLENCODED], produces = ["text/html"])
     fun findTest(@RequestBean bookForm: BookForm): ModelAndView<Any> {
@@ -32,7 +32,7 @@ class BookController(val bookService: BookService) {
         }
         resultMap.put("msg", updateAndMsg.second)
 
-        return ModelAndView("home", resultMap)
+        return ModelAndView("new_book", resultMap)
     }
 
 }
