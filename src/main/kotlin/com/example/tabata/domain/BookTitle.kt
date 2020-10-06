@@ -1,8 +1,12 @@
 package com.example.tabata.domain
 
-class BookTitle(val title: String) {
+class BookTitle(val title: String?) {
+
+    var errorMsg: String = ""
+    val ERROR_MSG_001: String = "この書籍は出版済のためタイトルの変更はできません"
+
     companion object {
-        fun valueToUpdate(title: String): BookTitle {
+        fun valueToUpdate(title: String?): BookTitle {
             return BookTitle(title)
         }
     }
@@ -13,6 +17,7 @@ class BookTitle(val title: String) {
 
     fun parseWithRelease(release: Release): Update {
         if (isAlready(release)) {
+            errorMsg = ERROR_MSG_001
             return Update.NG
         }
         return Update.OK
