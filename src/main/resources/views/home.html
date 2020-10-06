@@ -5,16 +5,17 @@
 	<title>Title</title>
 </head>
 <body>
+<span th:if="${msg!=null}" th:text="${msg}"></span>
 <form th:action="@{/book/new}" method="post">
 	<h2>新刊登録</h2><br>
 	著者名：<br>
-	<input type="text" name="author_name" th:value="${author_name}"><br>
+	<input type="text" name="author_name" th:value="${author_name}" required><br>
 	<br>
 	タイトル：<br>
 	<input type="text" name="title" th:value="${title}"><br>
 	<br>
 	発売日：<br>
-	<input type="text" name="date_publication" th:value="${date_publication}"><br>
+	<input type="date" name="yyyymmdd" value="">
 	<br>
 	<input type="submit" name="送信">
 </form>
