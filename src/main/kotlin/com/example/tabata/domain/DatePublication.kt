@@ -4,19 +4,20 @@ import java.time.DateTimeException
 import java.time.LocalDate
 import java.time.ZoneId
 
-class DatePublication(val yyyymmdd: String) {
+class DatePublication(val yyyymmdd: String?) {
 
+    var localDate: LocalDate? = null
     var errorMsg: String = ""
     val ERROR_MSG_001: String = "この書籍は出版済のため出版日は変更できません"
     val ERROR_MSG_002: String = "出版日の入力に誤りがあります"
     val ERROR_MSG_003: String = "出版日は過去日付に変更する事はできません"
 
     companion object {
-        fun valueToUpdate(yyyymmdd: String): DatePublication {
+        fun valueToUpdate(yyyymmdd: String?): DatePublication {
             return DatePublication(yyyymmdd)
         }
 
-        fun isPastDate(yyyymmdd: LocalDate): Boolean {
+        fun isPastDate(yyyymmdd: LocalDate?): Boolean {
             return now().isAfter(yyyymmdd)
         }
 
@@ -58,8 +59,12 @@ class DatePublication(val yyyymmdd: String) {
         return yyyymmdd.isNullOrBlank()
     }
 
+
     fun parse(): Update {
-        if (isPastDate(LocalDate.parse(yyyymmdd))) {
+
+        this.localDate = LocalDate.parse(yyyymmdd)
+
+        if (isPastDate(localDate)) {
             //昨日以前の日付へ変更する事はできないためNG
             errorMsg = ERROR_MSG_003
             return Update.NG
