@@ -9,10 +9,12 @@ internal class BookTitleTest {
     @Test
     fun 出版済だとタイトルを変更NG() {
 
-        var update =
-                BookTitle.valueToUpdate("シンニホン").parseWithRelease(Release.ON_SALE)
+        var bookTitle = BookTitle.valueToUpdate("シンニホン")
+
+        var update = bookTitle.parseWithRelease(Release.ON_SALE)
 
         assertEquals(update, Update.NG)
+        assertEquals(bookTitle.errorMsg, bookTitle.ERROR_MSG_001)
     }
 
     @Test
