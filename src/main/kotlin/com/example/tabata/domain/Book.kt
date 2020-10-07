@@ -13,7 +13,7 @@ data class Book(
         val authorName: String,
         val title: String?,
         val release: Release = Release.NOT_ON_SALSE,
-        val datePublication: LocalDate?
+        val salesDate: LocalDate?
 ) {
 
 }

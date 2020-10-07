@@ -23,7 +23,7 @@ class BookRepositoryTest(private val bookRepository: BookRepository) {
         Assertions.assertEquals(Release.ON_SALE, book.release)
         Assertions.assertEquals(
                 LocalDate.of(2010, 11, 24),
-                book.datePublication)
+                book.salesDate)
 
     }
 
@@ -51,7 +51,7 @@ class BookRepositoryTest(private val bookRepository: BookRepository) {
         Assertions.assertEquals(newBook.authorName, book.authorName)
         Assertions.assertNull(book.title)
         Assertions.assertEquals(newBook.release, book.release)
-        Assertions.assertEquals(newBook.datePublication, datePublication)
+        Assertions.assertEquals(newBook.salesDate, datePublication)
     }
 
     @Test
@@ -67,7 +67,7 @@ class BookRepositoryTest(private val bookRepository: BookRepository) {
         Assertions.assertEquals(newBook.authorName, book.authorName)
         Assertions.assertEquals(newBook.title, book.title)
         Assertions.assertEquals(newBook.release, book.release)
-        Assertions.assertNull(book.datePublication)
+        Assertions.assertNull(book.salesDate)
     }
 
     @Test
@@ -85,7 +85,7 @@ class BookRepositoryTest(private val bookRepository: BookRepository) {
         Assertions.assertEquals(updateBook.authorName, book.authorName)
         Assertions.assertEquals(updateBook.title, book.title)
         Assertions.assertEquals(updateBook.release, book.release)
-        Assertions.assertEquals(yyyyMMdd.toString(), updateBook.datePublication.toString())
+        Assertions.assertEquals(yyyyMMdd.toString(), updateBook.salesDate.toString())
     }
 
     @Test
@@ -105,7 +105,7 @@ class BookRepositoryTest(private val bookRepository: BookRepository) {
         Assertions.assertEquals(updateBook.authorName, book.authorName)
         Assertions.assertEquals(updateBook.title, newTitle)
         Assertions.assertEquals(updateBook.release, book.release)
-        Assertions.assertNull(updateBook.datePublication)
+        Assertions.assertNull(updateBook.salesDate)
     }
 
     fun 著者書籍を3件INSERT(): List<Book> {
@@ -131,7 +131,7 @@ class BookRepositoryTest(private val bookRepository: BookRepository) {
         val books = bookRepository.findByAuthorNameOrderByDatePublication("尾田栄一郎")
         Assertions.assertEquals(3, books.size)
 
-        val booksOrigin = newBooks.sortedBy { book -> book.datePublication }
+        val booksOrigin = newBooks.sortedBy { book -> book.salesDate }
 
         var index = 0;
 
@@ -141,7 +141,7 @@ class BookRepositoryTest(private val bookRepository: BookRepository) {
             Assertions.assertEquals(booksOrigin.get(index).authorName, book.authorName)
             Assertions.assertEquals(booksOrigin.get(index).title, book.title)
             Assertions.assertEquals(booksOrigin.get(index).release, book.release)
-            Assertions.assertEquals(booksOrigin.get(index).datePublication, book.datePublication)
+            Assertions.assertEquals(booksOrigin.get(index).salesDate, book.salesDate)
             ++index
         }
     }
@@ -170,7 +170,7 @@ class BookRepositoryTest(private val bookRepository: BookRepository) {
         Assertions.assertEquals(books.size, 1)
         Assertions.assertEquals(books.get(0).authorName, "尾田栄一郎")
         Assertions.assertEquals(books.get(0).title, "ワンピース20巻")
-        Assertions.assertEquals(books.get(0).datePublication, LocalDate.of(2001, 9, 9))
+        Assertions.assertEquals(books.get(0).salesDate, LocalDate.of(2001, 9, 9))
 
     }
 
@@ -184,8 +184,8 @@ class BookRepositoryTest(private val bookRepository: BookRepository) {
 
         Assertions.assertEquals(books.size, 3)
 
-        newBooks.sortedBy { book -> book.datePublication }
-        books.sortedBy { book -> book.datePublication }
+        newBooks.sortedBy { book -> book.salesDate }
+        books.sortedBy { book -> book.salesDate }
 
         var index = 0;
 
@@ -193,7 +193,7 @@ class BookRepositoryTest(private val bookRepository: BookRepository) {
             Assertions.assertEquals(newBooks.get(index).authorName, book.authorName)
             Assertions.assertEquals(newBooks.get(index).title, book.title)
             Assertions.assertEquals(newBooks.get(index).release, book.release)
-            Assertions.assertEquals(newBooks.get(index).datePublication, book.datePublication)
+            Assertions.assertEquals(newBooks.get(index).salesDate, book.salesDate)
             ++index
         }
     }
@@ -208,8 +208,8 @@ class BookRepositoryTest(private val bookRepository: BookRepository) {
 
         Assertions.assertEquals(books.size, 3)
 
-        newBooks.sortedBy { book -> book.datePublication }
-        books.sortedBy { book -> book.datePublication }
+        newBooks.sortedBy { book -> book.salesDate }
+        books.sortedBy { book -> book.salesDate }
 
         var index = 0;
 
@@ -217,7 +217,7 @@ class BookRepositoryTest(private val bookRepository: BookRepository) {
             Assertions.assertEquals(newBooks.get(index).authorName, book.authorName)
             Assertions.assertEquals(newBooks.get(index).title, book.title)
             Assertions.assertEquals(newBooks.get(index).release, book.release)
-            Assertions.assertEquals(newBooks.get(index).datePublication, book.datePublication)
+            Assertions.assertEquals(newBooks.get(index).salesDate, book.salesDate)
             ++index
         }
     }
@@ -236,17 +236,17 @@ class BookRepositoryTest(private val bookRepository: BookRepository) {
 
         Assertions.assertEquals(books.size, 2)
 
-        books.sortedBy { book -> book.datePublication }
+        books.sortedBy { book -> book.salesDate }
 
         Assertions.assertEquals(books.get(0).authorName, "尾田栄一郎")
         Assertions.assertEquals(books.get(0).title, "ワンピース20巻")
         Assertions.assertEquals(books.get(0).release, Release.ON_SALE)
-        Assertions.assertEquals(books.get(0).datePublication, LocalDate.of(2001, 9, 9))
+        Assertions.assertEquals(books.get(0).salesDate, LocalDate.of(2001, 9, 9))
 
         Assertions.assertEquals(books.get(1).authorName, "尾田栄一郎")
         Assertions.assertEquals(books.get(1).title, "ワンピース22巻")
         Assertions.assertEquals(books.get(1).release, Release.ON_SALE)
-        Assertions.assertEquals(books.get(1).datePublication, LocalDate.of(2002, 2, 9))
+        Assertions.assertEquals(books.get(1).salesDate, LocalDate.of(2002, 2, 9))
 
     }
 }
