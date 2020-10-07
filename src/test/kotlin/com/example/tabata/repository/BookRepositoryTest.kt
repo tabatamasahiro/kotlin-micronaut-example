@@ -108,21 +108,30 @@ class BookRepositoryTest(private val bookRepository: BookRepository) {
         Assertions.assertNull(updateBook.datePublication)
     }
 
-    @Test
-    fun 著者に紐づく書籍をすべて取得() {
-        var op1 = Book(UUID.randomUUID(), "尾田栄一郎", "ワンピース1巻",
+    fun 著者書籍を3件INSERT(): List<Book> {
+        val op1 = Book(UUID.randomUUID(), "尾田栄一郎", "ワンピース1巻",
                 Release.ON_SALE, LocalDate.of(1997, 12, 29))
-        var op20 = Book(UUID.randomUUID(), "尾田栄一郎", "ワンピース20巻",
+        val op20 = Book(UUID.randomUUID(), "尾田栄一郎", "ワンピース20巻",
                 Release.ON_SALE, LocalDate.of(2001, 9, 9))
-        var op35 = Book(UUID.randomUUID(), "尾田栄一郎", "ワンピース35巻",
+        val op35 = Book(UUID.randomUUID(), "尾田栄一郎", "ワンピース35巻",
                 Release.ON_SALE, LocalDate.of(2004, 11, 9))
 
-        bookRepository.saveAll(listOf(op1, op20, op35))
+        val newBooks = listOf(op1, op20, op35)
 
-        var books = bookRepository.findByAuthorNameOrderByDatePublication("尾田栄一郎")
+        bookRepository.saveAll(newBooks)
+
+        return newBooks
+    }
+
+    @Test
+    fun 著者に紐づく書籍をすべて取得() {
+
+        val newBooks = 著者書籍を3件INSERT()
+
+        val books = bookRepository.findByAuthorNameOrderByDatePublication("尾田栄一郎")
         Assertions.assertEquals(3, books.size)
 
-        var booksOrigin = listOf<Book>(op1, op20, op35).sortedBy { book -> book.datePublication }
+        val booksOrigin = newBooks.sortedBy { book -> book.datePublication }
 
         var index = 0;
 
@@ -143,11 +152,101 @@ class BookRepositoryTest(private val bookRepository: BookRepository) {
         著者に紐づく書籍をすべて取得()
         bookRepository.deleteByAuthorName("尾田栄一郎")
 
-        var books = bookRepository.findByAuthorNameOrderByDatePublication("尾田栄一郎")
+        var books = bookRepository.findByTitleLike("尾田栄一郎")
         Assertions.assertEquals(0, books.size)
 
         for (book in bookRepository.findAll()) {
             println(book)
         }
+    }
+
+    @Test
+    fun タイトルによる書籍検索_結果1件() {
+
+        著者書籍を3件INSERT()
+
+        var books = bookRepository.findByTitleLike("ワンピース20巻")
+
+        Assertions.assertEquals(books.size, 1)
+        Assertions.assertEquals(books.get(0).authorName, "尾田栄一郎")
+        Assertions.assertEquals(books.get(0).title, "ワンピース20巻")
+        Assertions.assertEquals(books.get(0).datePublication, LocalDate.of(2001, 9, 9))
+
+    }
+
+    @Test
+    fun タイトルによる書籍検索_前方一致_結果3件() {
+
+        var newBooks = 著者書籍を3件INSERT()
+
+//        var books = bookRepository.findByTitle("ワンピース%")
+        var books = bookRepository.findByTitleLike("ワンピース%")
+
+        Assertions.assertEquals(books.size, 3)
+
+        newBooks.sortedBy { book -> book.datePublication }
+        books.sortedBy { book -> book.datePublication }
+
+        var index = 0;
+
+        for (book in books) {
+            Assertions.assertEquals(newBooks.get(index).authorName, book.authorName)
+            Assertions.assertEquals(newBooks.get(index).title, book.title)
+            Assertions.assertEquals(newBooks.get(index).release, book.release)
+            Assertions.assertEquals(newBooks.get(index).datePublication, book.datePublication)
+            ++index
+        }
+    }
+
+
+    @Test
+    fun タイトルによる書籍検索_後方一致_結果3件() {
+
+        var newBooks = 著者書籍を3件INSERT()
+
+        var books = bookRepository.findByTitleLike("%巻")
+
+        Assertions.assertEquals(books.size, 3)
+
+        newBooks.sortedBy { book -> book.datePublication }
+        books.sortedBy { book -> book.datePublication }
+
+        var index = 0;
+
+        for (book in books) {
+            Assertions.assertEquals(newBooks.get(index).authorName, book.authorName)
+            Assertions.assertEquals(newBooks.get(index).title, book.title)
+            Assertions.assertEquals(newBooks.get(index).release, book.release)
+            Assertions.assertEquals(newBooks.get(index).datePublication, book.datePublication)
+            ++index
+        }
+    }
+
+    @Test
+    fun タイトルによる書籍検索_あいまい_結果2件() {
+
+        var newBooks = 著者書籍を3件INSERT()
+
+        val op22 = Book(UUID.randomUUID(), "尾田栄一郎", "ワンピース22巻",
+                Release.ON_SALE, LocalDate.of(2002, 2, 9))
+
+        bookRepository.save(op22)
+
+        var books = bookRepository.findByTitleLike("%ピース2%")
+
+        Assertions.assertEquals(books.size, 2)
+
+        books.sortedBy { book -> book.datePublication }
+
+        Assertions.assertEquals(books.get(0).authorName, "尾田栄一郎")
+        Assertions.assertEquals(books.get(0).title, "ワンピース20巻")
+        Assertions.assertEquals(books.get(0).release, Release.ON_SALE)
+        Assertions.assertEquals(books.get(0).datePublication, LocalDate.of(2001, 9, 9))
+
+        Assertions.assertEquals(books.get(1).authorName, "尾田栄一郎")
+        Assertions.assertEquals(books.get(1).title, "ワンピース22巻")
+        Assertions.assertEquals(books.get(1).release, Release.ON_SALE)
+        Assertions.assertEquals(books.get(1).datePublication, LocalDate.of(2002, 2, 9))
+
     }
 }
