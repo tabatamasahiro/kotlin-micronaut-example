@@ -1,14 +1,14 @@
 package com.example.tabata.domain
 
 /**
- * Title と DatePublication が SET された状態で DONE になる事ができる
+ * Title と salesDate が SET された状態で DONE になる事ができる
  */
 class BookRelease() {
     companion object {
-        fun checkToDoRelase(datePublication: DatePublication,
+        fun checkToDoRelase(salesDate: SalesDate,
                             bookTitle: BookTitle): Release {
 
-            if (datePublication.yyyymmdd.isNullOrBlank()) {
+            if (salesDate.yyyymmdd.isNullOrBlank()) {
                 return Release.NOT_ON_SALSE
             }
 

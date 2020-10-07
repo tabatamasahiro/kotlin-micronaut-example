@@ -4,7 +4,7 @@ import java.time.DateTimeException
 import java.time.LocalDate
 import java.time.ZoneId
 
-class DatePublication(val yyyymmdd: String?) {
+class SalesDate(val yyyymmdd: String?) {
 
     var localDate: LocalDate? = null
     var errorMsg: String = ""
@@ -13,8 +13,8 @@ class DatePublication(val yyyymmdd: String?) {
     val ERROR_MSG_003: String = "出版日に過去日付を指定する事はできません"
 
     companion object {
-        fun valueToUpdate(yyyymmdd: String?): DatePublication {
-            return DatePublication(yyyymmdd)
+        fun valueToUpdate(yyyymmdd: String?): SalesDate {
+            return SalesDate(yyyymmdd)
         }
 
         fun isPastDate(yyyymmdd: LocalDate?): Boolean {

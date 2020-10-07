@@ -19,17 +19,17 @@ class BookService(val bookRepository: BookRepository) {
             return Pair(Update.NG, bookTitle.errorMsg)
         }
 
-        var datePublication = DatePublication.valueToUpdate(bookForm.yyyymmdd)
+        var salesDate = SalesDate.valueToUpdate(bookForm.yyyymmdd)
 
-        if (datePublication.parseToSave() == Update.NG) {
+        if (salesDate.parseToSave() == Update.NG) {
             // 現在日以降の日付が選択されていない
-            return Pair(Update.NG, datePublication.errorMsg)
+            return Pair(Update.NG, salesDate.errorMsg)
         }
 
-        var release = BookRelease.checkToDoRelase(datePublication, bookTitle)
+        var release = BookRelease.checkToDoRelase(salesDate, bookTitle)
 
         bookRepository.save(Book(UUID.randomUUID(), bookForm.author_name,
-                bookForm.title, release, datePublication.localDate))
+                bookForm.title, release, salesDate.localDate))
 
         return Pair(Update.OK, "登録しました")
     }

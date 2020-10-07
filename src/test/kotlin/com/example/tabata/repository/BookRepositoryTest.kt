@@ -14,7 +14,7 @@ class BookRepositoryTest(private val bookRepository: BookRepository) {
     @Test
     fun 著者名で検索() {
 
-        var books = bookRepository.findByAuthorNameOrderByDatePublication("安宅和人")
+        var books = bookRepository.findByAuthorNameOrderBySalesDate("安宅和人")
         Assertions.assertEquals(1, books.size)
         var book = books.get(0)
 
@@ -29,7 +29,7 @@ class BookRepositoryTest(private val bookRepository: BookRepository) {
 
 
     fun findBy尾田栄一郎(): Book {
-        var books = bookRepository.findByAuthorNameOrderByDatePublication("尾田栄一郎")
+        var books = bookRepository.findByAuthorNameOrderBySalesDate("尾田栄一郎")
         Assertions.assertEquals(1, books.size)
         return books.get(0)
     }
@@ -37,10 +37,10 @@ class BookRepositoryTest(private val bookRepository: BookRepository) {
     @Test
     fun insert_タイトルだけ未定() {
 
-        var datePublication = LocalDate.of(2010, 11, 24)
+        var salesDate = LocalDate.of(2010, 11, 24)
 
         var newBook = Book(UUID.randomUUID(), "尾田栄一郎", null,
-                Release.NOT_ON_SALSE, datePublication)
+                Release.NOT_ON_SALSE, salesDate)
 
         bookRepository.save(newBook)
 
@@ -51,7 +51,7 @@ class BookRepositoryTest(private val bookRepository: BookRepository) {
         Assertions.assertEquals(newBook.authorName, book.authorName)
         Assertions.assertNull(book.title)
         Assertions.assertEquals(newBook.release, book.release)
-        Assertions.assertEquals(newBook.salesDate, datePublication)
+        Assertions.assertEquals(newBook.salesDate, salesDate)
     }
 
     @Test
@@ -77,15 +77,15 @@ class BookRepositoryTest(private val bookRepository: BookRepository) {
 
         val book = findBy尾田栄一郎()
 
-        var yyyyMMdd = LocalDate.of(2024, 11, 29)
-        bookRepository.update(book.isbn, yyyyMMdd)
+        var salesDate = LocalDate.of(2024, 11, 29)
+        bookRepository.update(book.isbn, salesDate)
 
         val updateBook = findBy尾田栄一郎()
 
         Assertions.assertEquals(updateBook.authorName, book.authorName)
         Assertions.assertEquals(updateBook.title, book.title)
         Assertions.assertEquals(updateBook.release, book.release)
-        Assertions.assertEquals(yyyyMMdd.toString(), updateBook.salesDate.toString())
+        Assertions.assertEquals(salesDate.toString(), updateBook.salesDate.toString())
     }
 
     @Test
@@ -128,7 +128,7 @@ class BookRepositoryTest(private val bookRepository: BookRepository) {
 
         val newBooks = 著者書籍を3件INSERT()
 
-        val books = bookRepository.findByAuthorNameOrderByDatePublication("尾田栄一郎")
+        val books = bookRepository.findByAuthorNameOrderBySalesDate("尾田栄一郎")
         Assertions.assertEquals(3, books.size)
 
         val booksOrigin = newBooks.sortedBy { book -> book.salesDate }
