@@ -34,4 +34,23 @@ class BookService(val bookRepository: BookRepository) {
         return Pair(Update.OK, "登録しました")
     }
 
+
+    fun search(author_name: String, title: String): List<Book> {
+
+        if (author_name.isNotBlank() && title.isNullOrBlank()) {
+            println("001")
+            return bookRepository.findByAuthorNameLike("%${author_name}%")
+        }
+
+        if (author_name.isNullOrBlank() && title.isNotBlank()) {
+            println("002")
+            return bookRepository.findByTitleLike("%${title}%")
+        }
+
+        println("003")
+        return bookRepository.findByAuthorNameLikeAndTitleLike(
+                "%${author_name}%", "%${title}%")
+
+    }
+
 }

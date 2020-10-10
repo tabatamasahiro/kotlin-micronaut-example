@@ -5,18 +5,22 @@ import com.example.tabata.domain.Update
 import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.*
 import io.micronaut.views.ModelAndView
+import io.micronaut.views.View
 
 @Controller("/book")
 class BookController(val bookService: BookService) {
+
+    val createMap = hashMapOf<String, String>("crud" to "/create", "page_sub_title" to "新刊登録")
+    val updateMap = hashMapOf<String, String>("crud" to "/update", "page_sub_title" to "書籍情報の変更")
 
     /**
      * ブラウザへ返却したhome.htmlがレンダリングされた
      */
     @Get(value = "/", consumes = [MediaType.APPLICATION_FORM_URLENCODED], produces = ["text/html"])
-    fun home() = ModelAndView("new_book", "")
+    fun createStart() = ModelAndView("book", createMap)
 
-    @Post("/new", consumes = [MediaType.APPLICATION_FORM_URLENCODED], produces = ["text/html"])
-    fun findTest(@RequestBean bookForm: BookForm): ModelAndView<Any> {
+    @Post("/create", consumes = [MediaType.APPLICATION_FORM_URLENCODED], produces = ["text/html"])
+    fun createExecute(@RequestBean bookForm: BookForm): ModelAndView<Any> {
 
         println(bookForm)
 
@@ -32,7 +36,30 @@ class BookController(val bookService: BookService) {
         }
         resultMap.put("msg", updateAndMsg.second)
 
-        return ModelAndView("new_book", resultMap)
+        return ModelAndView("book", resultMap)
     }
+
+    @Get(value = "/search", consumes = [MediaType.APPLICATION_FORM_URLENCODED], produces = ["text/html"])
+    fun searchStart() = ModelAndView("search", "")
+
+    @Post("/search", consumes = [MediaType.APPLICATION_FORM_URLENCODED], produces = ["text/html"])
+    fun searchExecute(author_name: String, title: String): ModelAndView<Any> {
+        println("author_name=${author_name}, title=${title}")
+
+        var books = bookService.search(author_name, title)
+
+        books.forEach { book ->
+            println(book)
+        }
+
+        var modelAndView = ModelAndView<Any>()
+        modelAndView.setView("search")
+        modelAndView.setModel(mapOf("books" to books, "author_name" to author_name, "title" to title))
+
+        return modelAndView
+    }
+
+    @Get(value = "/update", consumes = [MediaType.APPLICATION_FORM_URLENCODED], produces = ["text/html"])
+    fun updateStart() = ModelAndView("book", updateMap)
 
 }

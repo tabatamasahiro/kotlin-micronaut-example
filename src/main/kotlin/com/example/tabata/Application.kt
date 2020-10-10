@@ -38,7 +38,19 @@ class Application(
         var book2 = Book(UUID.randomUUID(), "安宅和人", "issue driven", Release.ON_SALE,
                 LocalDate.of(2010, 11, 24))
 
-        bookRepository.saveAll(listOf(book1, book2))
+        var book3 = Book(UUID.randomUUID(), "akira toriyama", "dragon ball-1", Release.ON_SALE,
+                LocalDate.of(1985, 9, 10))
+
+        var book4 = Book(UUID.randomUUID(), "akira toriyama", "dragon ball-2", Release.ON_SALE,
+                LocalDate.of(1986, 1, 10))
+
+        var book5 = Book(UUID.randomUUID(), "akira toriyama", "dragon ball-3", Release.ON_SALE,
+                LocalDate.of(1986, 6, 10))
+
+        var book6 = Book(UUID.randomUUID(), "nakao akira", "kamisan no syokutaku", Release.ON_SALE,
+                LocalDate.of(1999, 11, 1))
+
+        bookRepository.saveAll(listOf(book1, book2, book3, book4, book5, book6))
     }
 
     companion object {
