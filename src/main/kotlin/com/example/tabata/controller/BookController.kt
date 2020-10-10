@@ -1,6 +1,8 @@
 package com.example.tabata.controller
 
 import com.example.tabata.domain.BookService
+import com.example.tabata.domain.BookTitle
+import com.example.tabata.domain.Release
 import com.example.tabata.domain.Update
 import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.*
@@ -60,8 +62,8 @@ class BookController(val bookService: BookService) {
         return modelAndView
     }
 
-    @Get(value = "/change", consumes = [MediaType.APPLICATION_FORM_URLENCODED], produces = ["text/html"])
-    fun changeStart(@QueryValue isbn: String): ModelAndView<Any> {
+    @Get(value = "/update", consumes = [MediaType.APPLICATION_FORM_URLENCODED], produces = ["text/html"])
+    fun updateStart(@QueryValue isbn: String): ModelAndView<Any> {
         println("isbn=${isbn}")
 
         var modelAndView = ModelAndView<Any>()
@@ -74,13 +76,24 @@ class BookController(val bookService: BookService) {
                 "isbn" to book.isbn.toString(),
                 "author_name" to book.authorName,
                 "title" to book.title,
-                "yyyymmdd" to book.salesDate.toString())
+                "yyyymmdd" to book.salesDate.toString(),
+                "release" to book.release.name)
 
         mapOf.putAll(updateMap)
 
         modelAndView.setModel(mapOf)
 
         return modelAndView
+    }
+
+    @Post(value = "/update", consumes = [MediaType.APPLICATION_FORM_URLENCODED], produces = ["text/html"])
+    fun updateExecute(isbn: String, title: String, yyyymmdd: String, release: Release): ModelAndView<Any> {
+
+        println("isbn: ${isbn}, title: ${title}, yyyymmdd: ${yyyymmdd}, release: ${release.name}")
+
+//        BookTitle.valueToUpdate(title).parseWithRelease()
+
+        return ModelAndView("book", "")
     }
 
 }

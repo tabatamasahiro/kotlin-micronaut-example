@@ -34,7 +34,7 @@
 				<td th:text="${book.authorName}"></td>
 				<td th:text="${book.title}"></td>
 				<td th:text="${book.salesDate}"></td>
-				<td><a th:href="|@{/book/change}?isbn=${book.isbn}|" target="_blank">更新/削除</a></td>
+				<td><a th:href="|@{/book/update}?isbn=${book.isbn}|" target="_blank">更新/削除</a></td>
 			</tr>
 		</table>
 	</span>
