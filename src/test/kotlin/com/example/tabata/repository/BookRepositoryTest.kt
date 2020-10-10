@@ -249,4 +249,65 @@ class BookRepositoryTest(private val bookRepository: BookRepository) {
         Assertions.assertEquals(books.get(1).salesDate, LocalDate.of(2002, 2, 9))
 
     }
+
+    @Test
+    fun 著者名であいまい検索By田栄() {
+
+        var newBooks = 著者書籍を3件INSERT().sortedBy { book -> book.salesDate }
+
+        val tk = Book(UUID.randomUUID(), "田中角栄", "日本列島改造論",
+                Release.ON_SALE, LocalDate.of(1972, 6, 20))
+
+        bookRepository.save(tk)
+
+        val authName = "田栄"
+
+        var books = bookRepository.findByAuthorNameLike("%${authName}%")
+                .sortedBy { book -> book.salesDate }
+
+        var index = 0;
+
+        Assertions.assertEquals(books.size, 3)
+
+        for (book in books) {
+//            println(book)
+//            println(newBooks.get(index))
+            Assertions.assertEquals(newBooks.get(index).authorName, book.authorName)
+            Assertions.assertEquals(newBooks.get(index).title, book.title)
+            Assertions.assertEquals(newBooks.get(index).release, book.release)
+            Assertions.assertEquals(newBooks.get(index).salesDate, book.salesDate)
+            ++index
+        }
+    }
+
+
+    @Test
+    fun 著者名であいまい検索By田() {
+
+        val tk = Book(UUID.randomUUID(), "田中角栄", "日本列島改造論",
+                Release.ON_SALE, LocalDate.of(1972, 6, 20))
+        bookRepository.save(tk)
+
+        var newBooks = 著者書籍を3件INSERT().toMutableList().plus(tk)
+                .toList().sortedBy { book -> book.salesDate }
+
+        val authName = "田"
+
+        var books = bookRepository.findByAuthorNameLike("%${authName}%")
+                .sortedBy { book -> book.salesDate }
+
+        var index = 0;
+
+        Assertions.assertEquals(books.size, 4)
+
+        for (book in books) {
+            println(book)
+            println(newBooks.get(index))
+            Assertions.assertEquals(newBooks.get(index).authorName, book.authorName)
+            Assertions.assertEquals(newBooks.get(index).title, book.title)
+            Assertions.assertEquals(newBooks.get(index).release, book.release)
+            Assertions.assertEquals(newBooks.get(index).salesDate, book.salesDate)
+            ++index
+        }
+    }
 }
