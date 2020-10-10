@@ -314,11 +314,15 @@ class BookRepositoryTest(private val bookRepository: BookRepository) {
     @Test
     fun 著者名とタイトルであいまい検索() {
 
+        val tk = Book(UUID.randomUUID(), "田中角栄", "日本列島改造論",
+                Release.ON_SALE, LocalDate.of(1972, 6, 20))
+        bookRepository.save(tk)
+
         val op22 = Book(UUID.randomUUID(), "田畑祐宏", "ピーマンの肉詰め",
                 Release.ON_SALE, LocalDate.of(2029, 2, 9))
         bookRepository.save(op22)
 
-        var newBooks = 著者書籍を3件INSERT().toMutableList().plus(op22)
+        var newBooks = 著者書籍を3件INSERT().toMutableList().plus(op22).plus(tk)
                 .toList().sortedBy { book -> book.salesDate }
 
         var authName = "田"
@@ -341,6 +345,31 @@ class BookRepositoryTest(private val bookRepository: BookRepository) {
             Assertions.assertEquals(newBooks.get(index).salesDate, book.salesDate)
             ++index
         }
+
+    }
+
+
+    @Test
+    fun 著者名とタイトルであいまい検索_検索結果0件() {
+
+        val tk = Book(UUID.randomUUID(), "田中角栄", "日本列島改造論",
+                Release.ON_SALE, LocalDate.of(1972, 6, 20))
+        bookRepository.save(tk)
+
+        val op22 = Book(UUID.randomUUID(), "田畑祐宏", "ピーマンの肉詰め",
+                Release.ON_SALE, LocalDate.of(2029, 2, 9))
+        bookRepository.save(op22)
+
+        var newBooks = 著者書籍を3件INSERT().toMutableList().plus(op22)
+                .toList().sortedBy { book -> book.salesDate }
+
+        var authName = "田中"
+        var title = "ピー"
+
+        var books = bookRepository.findByAuthorNameLikeAndTitleLike(
+                "%${authName}%", "%${title}%").sortedBy { book -> book.salesDate }
+
+        Assertions.assertEquals(books.size, 0)
 
     }
 }
