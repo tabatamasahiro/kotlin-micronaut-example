@@ -22,6 +22,8 @@ interface BookRepository : CrudRepository<Book, UUID> {
 
     fun findByTitleLike(title: String): List<Book>
 
+    fun findByAuthorNameLikeAndTitleLike(authorName: String, title: String): List<Book>
+
     fun update(@Id isbn: UUID?, salesDate: LocalDate)
 
     fun update(@Id isbn: UUID?, title: String)

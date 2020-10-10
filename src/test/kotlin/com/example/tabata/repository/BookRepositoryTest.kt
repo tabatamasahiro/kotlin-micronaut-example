@@ -310,4 +310,37 @@ class BookRepositoryTest(private val bookRepository: BookRepository) {
             ++index
         }
     }
+
+    @Test
+    fun 著者名とタイトルであいまい検索() {
+
+        val op22 = Book(UUID.randomUUID(), "田畑祐宏", "ピーマンの肉詰め",
+                Release.ON_SALE, LocalDate.of(2029, 2, 9))
+        bookRepository.save(op22)
+
+        var newBooks = 著者書籍を3件INSERT().toMutableList().plus(op22)
+                .toList().sortedBy { book -> book.salesDate }
+
+        var authName = "田"
+        var title = "ピー"
+
+        var books = bookRepository.findByAuthorNameLikeAndTitleLike(
+                "%${authName}%", "%${title}%").sortedBy { book -> book.salesDate }
+
+        var index = 0
+
+        Assertions.assertEquals(books.size, 4)
+
+        for (book in books) {
+//            println(book)
+//            println(newBooks.get(index))
+//            println("---------------------------")
+            Assertions.assertEquals(newBooks.get(index).authorName, book.authorName)
+            Assertions.assertEquals(newBooks.get(index).title, book.title)
+            Assertions.assertEquals(newBooks.get(index).release, book.release)
+            Assertions.assertEquals(newBooks.get(index).salesDate, book.salesDate)
+            ++index
+        }
+
+    }
 }
