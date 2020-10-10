@@ -372,4 +372,16 @@ class BookRepositoryTest(private val bookRepository: BookRepository) {
         Assertions.assertEquals(books.size, 0)
 
     }
+
+    @Test
+    fun 著者名ANDタイトルの存在確認() {
+
+        val tk = Book(UUID.randomUUID(), "田中角栄", "日本列島改造論",
+                Release.ON_SALE, LocalDate.of(1972, 6, 20))
+        bookRepository.save(tk)
+
+        Assertions.assertTrue(bookRepository.existsByAuthorNameAndTitle("田中角栄", "日本列島改造論"))
+        Assertions.assertFalse(bookRepository.existsByAuthorNameAndTitle("abcd", "efg123"))
+
+    }
 }
