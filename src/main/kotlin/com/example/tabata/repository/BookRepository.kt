@@ -1,7 +1,9 @@
 package com.example.tabata.repository
 
 import com.example.tabata.domain.Book
+import com.example.tabata.domain.Release
 import com.example.tabata.domain.SalesDate
+import com.example.tabata.domain.Update
 import io.micronaut.data.annotation.Id
 import io.micronaut.data.jdbc.annotation.JdbcRepository
 import io.micronaut.data.model.query.builder.sql.Dialect
@@ -24,9 +26,13 @@ interface BookRepository : CrudRepository<Book, UUID> {
 
     fun findByAuthorNameLikeAndTitleLike(authorName: String, title: String): List<Book>
 
-    fun update(@Id isbn: UUID?, salesDate: LocalDate)
+    fun update(@Id isbn: UUID, salesDate: LocalDate)
 
-    fun update(@Id isbn: UUID?, title: String)
+    fun update(@Id isbn: UUID, title: String)
+
+    fun update(@Id isbn: UUID, title: String?, salesDate: LocalDate?)
+
+    fun update(@Id isbn: UUID, release: Release)
 
     fun existsByAuthorNameAndTitle(authorName: String, title: String?): Boolean
 

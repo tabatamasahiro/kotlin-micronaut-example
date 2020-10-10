@@ -9,7 +9,7 @@ import javax.persistence.*
 data class Book(
         @Id
         @AutoPopulated
-        var isbn: UUID?,
+        var isbn: UUID,
         val authorName: String,
         val title: String?,
         val release: Release = Release.NOT_ON_SALSE,

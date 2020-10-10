@@ -384,4 +384,17 @@ class BookRepositoryTest(private val bookRepository: BookRepository) {
         Assertions.assertFalse(bookRepository.existsByAuthorNameAndTitle("abcd", "efg123"))
 
     }
+
+    @Test
+    fun Relaseを更新() {
+        val op22 = Book(UUID.randomUUID(), "田畑祐宏", "ピーマンの肉詰め",
+                Release.ON_SALE, LocalDate.of(2029, 2, 9))
+        bookRepository.save(op22)
+
+        bookRepository.update(op22.isbn, Release.NOT_ON_SALSE)
+
+        var book = bookRepository.findById(op22.isbn)
+
+        println(book)
+    }
 }

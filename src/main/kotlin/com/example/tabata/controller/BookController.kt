@@ -1,13 +1,11 @@
 package com.example.tabata.controller
 
 import com.example.tabata.domain.BookService
-import com.example.tabata.domain.BookTitle
 import com.example.tabata.domain.Release
 import com.example.tabata.domain.Update
 import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.*
 import io.micronaut.views.ModelAndView
-import io.micronaut.views.View
 
 @Controller("/book")
 class BookController(val bookService: BookService) {
@@ -49,7 +47,7 @@ class BookController(val bookService: BookService) {
     fun searchExecute(author_name: String, title: String): ModelAndView<Any> {
         println("author_name=${author_name}, title=${title}")
 
-        var books = bookService.search(author_name, title)
+        var books = bookService.searchAndUpdateReleaseStatus(author_name, title)
 
         books.forEach { book ->
             println(book)
@@ -70,30 +68,49 @@ class BookController(val bookService: BookService) {
 
         modelAndView.setView("book")
 
-        var book = bookService.findOne(isbn)
+        var optionalBook = bookService.findOne(isbn)
 
-        var mapOf = mutableMapOf<String, String?>(
-                "isbn" to book.isbn.toString(),
-                "author_name" to book.authorName,
-                "title" to book.title,
-                "yyyymmdd" to book.salesDate.toString(),
-                "release" to book.release.name)
+        var resutlMap = mutableMapOf<String, String?>()
+        resutlMap.putAll(updateMap)
 
-        mapOf.putAll(updateMap)
+        if (optionalBook.isPresent) {
+            resutlMap.put("isbn", optionalBook.get().isbn.toString())
+            resutlMap.put("author_name", optionalBook.get().authorName)
+            resutlMap.put("title", optionalBook.get().title)
+            resutlMap.put("yyyymmdd", optionalBook.get().salesDate.toString())
+            resutlMap.put("release", optionalBook.get().release.name)
+        } else {
+            resutlMap.put("msg", "想定のエラー")
+        }
 
-        modelAndView.setModel(mapOf)
+        modelAndView.setModel(resutlMap)
 
         return modelAndView
     }
 
     @Post(value = "/update", consumes = [MediaType.APPLICATION_FORM_URLENCODED], produces = ["text/html"])
-    fun updateExecute(isbn: String, title: String, yyyymmdd: String, release: Release): ModelAndView<Any> {
+    fun updateExecute(isbn: String, release: Release, @RequestBean bookForm: BookForm): ModelAndView<Any> {
 
-        println("isbn: ${isbn}, title: ${title}, yyyymmdd: ${yyyymmdd}, release: ${release.name}")
+        println("------------------------------------------------")
+        println("isbn: ${isbn}, release: ${release.name}")
+        println(bookForm)
+        println("------------------------------------------------")
 
-//        BookTitle.valueToUpdate(title).parseWithRelease()
+        var updateAndMsg = bookService.updateTitleAndSalseDate(isbn, release, bookForm)
 
-        return ModelAndView("book", "")
+        var resultMap = mutableMapOf<String, String?>("msg" to updateAndMsg.second)
+
+        resultMap.putAll(updateMap)
+
+        if (updateAndMsg.first == Update.NG) {
+            resultMap.put("isbn", isbn)
+            resultMap.put("title", bookForm.title)
+            resultMap.put("author_name", bookForm.author_name)
+            resultMap.put("yyyymmdd", bookForm.yyyymmdd)
+            resultMap.put("release", release.name)
+        }
+
+        return ModelAndView("book", resultMap)
     }
 
 }
