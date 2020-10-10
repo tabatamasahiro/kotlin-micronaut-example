@@ -2,6 +2,7 @@ package com.example.tabata.domain
 
 import com.example.tabata.controller.BookForm
 import com.example.tabata.repository.BookRepository
+import java.time.LocalDate
 import java.util.*
 import javax.inject.Singleton
 
@@ -28,6 +29,15 @@ class BookService(val bookRepository: BookRepository) {
 
         var release = BookRelease.checkToDoRelase(salesDate, bookTitle)
 
+        if (bookRepository.existsByAuthorNameAndTitle(bookForm.author_name, bookForm.title)) {
+            return Pair(Update.NG, "この著者はすでに登録されています")
+        }
+
+//        if (bookRepository.existsByAuthorNameAndTitleAndSalesDate(
+//                        bookForm.author_name, bookForm.title, salesDate.valueForDatabse())) {
+//            return Pair(Update.NG, "この著者はすでに登録されています(2)")
+//        }
+
         bookRepository.save(Book(UUID.randomUUID(), bookForm.author_name,
                 bookForm.title, release, salesDate.localDate))
 
@@ -51,6 +61,10 @@ class BookService(val bookRepository: BookRepository) {
         return bookRepository.findByAuthorNameLikeAndTitleLike(
                 "%${author_name}%", "%${title}%")
 
+    }
+
+    fun findOne(isbn: String): Book {
+        return bookRepository.findById(UUID.fromString(isbn)).orElse(null)
     }
 
 }

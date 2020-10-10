@@ -28,5 +28,7 @@ interface BookRepository : CrudRepository<Book, UUID> {
 
     fun update(@Id isbn: UUID?, title: String)
 
-    fun existsByAuthorNameAndTitle(authorName: String, title: String): Boolean
+    fun existsByAuthorNameAndTitle(authorName: String, title: String?): Boolean
+
+    fun existsByAuthorNameAndTitleAndSalesDate(authorName: String, title: String?, salesDate: LocalDate?): Boolean
 }

@@ -35,6 +35,7 @@ class BookController(val bookService: BookService) {
             resultMap.put("yyyymmdd", bookForm.yyyymmdd)
         }
         resultMap.put("msg", updateAndMsg.second)
+        resultMap.putAll(createMap)
 
         return ModelAndView("book", resultMap)
     }
@@ -59,7 +60,27 @@ class BookController(val bookService: BookService) {
         return modelAndView
     }
 
-    @Get(value = "/update", consumes = [MediaType.APPLICATION_FORM_URLENCODED], produces = ["text/html"])
-    fun updateStart() = ModelAndView("book", updateMap)
+    @Get(value = "/change", consumes = [MediaType.APPLICATION_FORM_URLENCODED], produces = ["text/html"])
+    fun changeStart(@QueryValue isbn: String): ModelAndView<Any> {
+        println("isbn=${isbn}")
+
+        var modelAndView = ModelAndView<Any>()
+
+        modelAndView.setView("book")
+
+        var book = bookService.findOne(isbn)
+
+        var mapOf = mutableMapOf<String, String?>(
+                "isbn" to book.isbn.toString(),
+                "author_name" to book.authorName,
+                "title" to book.title,
+                "yyyymmdd" to book.salesDate.toString())
+
+        mapOf.putAll(updateMap)
+
+        modelAndView.setModel(mapOf)
+
+        return modelAndView
+    }
 
 }
