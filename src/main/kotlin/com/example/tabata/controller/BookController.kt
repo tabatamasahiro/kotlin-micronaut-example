@@ -1,14 +1,30 @@
 package com.example.tabata.controller
 
+import com.example.tabata.Application
 import com.example.tabata.domain.BookService
 import com.example.tabata.domain.Release
 import com.example.tabata.domain.Update
+import io.micronaut.http.HttpRequest
 import io.micronaut.http.MediaType
+import io.micronaut.http.MediaType.CHARSET_PARAMETER
+import io.micronaut.http.MutableHttpRequest
+import io.micronaut.http.MutableHttpResponse
 import io.micronaut.http.annotation.*
 import io.micronaut.views.ModelAndView
+import io.micronaut.views.View
+import org.slf4j.LoggerFactory
+import java.nio.charset.Charset.defaultCharset
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletRequestWrapper
+import javax.servlet.http.HttpServletResponse
+import javax.servlet.http.HttpServletResponseWrapper
+import kotlin.math.log
 
 @Controller("/book")
 class BookController(val bookService: BookService) {
+    companion object {
+        private val logger = LoggerFactory.getLogger(BookController::class.java)
+    }
 
     val createMap = hashMapOf<String, String>("crud" to "/create", "page_sub_title" to "新刊登録")
     val updateMap = hashMapOf<String, String>("crud" to "/update", "page_sub_title" to "書籍情報の変更")
@@ -17,25 +33,29 @@ class BookController(val bookService: BookService) {
      * ブラウザへ返却したhome.htmlがレンダリングされた
      */
     @Get(value = "/", consumes = [MediaType.APPLICATION_FORM_URLENCODED], produces = ["text/html"])
-    fun createStart() = ModelAndView("book", createMap)
+    fun indexStart() = ModelAndView("/index", "")
+
+    @Get(value = "/create", consumes = [MediaType.APPLICATION_FORM_URLENCODED], produces = ["text/html"])
+    fun createStart() = ModelAndView("/book", createMap)
 
     @Post("/create", consumes = [MediaType.APPLICATION_FORM_URLENCODED], produces = ["text/html"])
     fun createExecute(@RequestBean bookForm: BookForm): ModelAndView<Any> {
 
-        println(bookForm)
+        logger.info(bookForm.toString())
 
         var updateAndMsg = bookService.saveNewBook(bookForm)
 
-        var resultMap = hashMapOf<String, String?>()
+        var resultMap = mutableMapOf<String, String>()
+
+        logger.info("first=${updateAndMsg.first}, second=${updateAndMsg.second}")
 
         if (updateAndMsg.first == Update.NG) {
-            println("UpdateNG!!!${bookForm}")
-            resultMap.put("author_name", bookForm.author_name)
-            resultMap.put("title", bookForm.title)
-            resultMap.put("yyyymmdd", bookForm.yyyymmdd)
+            resultMap.plus("author_name" to bookForm.author_name)
+            resultMap.plus("title" to bookForm.title)
+            resultMap.plus("yyyymmdd" to bookForm.yyyymmdd)
         }
-        resultMap.put("msg", updateAndMsg.second)
-        resultMap.putAll(createMap)
+        resultMap.plus("msg" to updateAndMsg.second)
+        resultMap.plus(createMap)
 
         return ModelAndView("book", resultMap)
     }
@@ -43,15 +63,13 @@ class BookController(val bookService: BookService) {
     @Get(value = "/search", consumes = [MediaType.APPLICATION_FORM_URLENCODED], produces = ["text/html"])
     fun searchStart() = ModelAndView("search", "")
 
-    @Post("/search", consumes = [MediaType.APPLICATION_FORM_URLENCODED], produces = ["text/html"])
+    @Post("/search", consumes = [MediaType.APPLICATION_FORM_URLENCODED],
+            produces = ["text/html;charset=UTF-8;"])
     fun searchExecute(author_name: String, title: String): ModelAndView<Any> {
-        println("author_name=${author_name}, title=${title}")
+
+        logger.info("author_name=${author_name}, title=${title}")
 
         var books = bookService.searchAndUpdateReleaseStatus(author_name, title)
-
-        books.forEach { book ->
-            println(book)
-        }
 
         var modelAndView = ModelAndView<Any>()
         modelAndView.setView("search")
@@ -62,7 +80,8 @@ class BookController(val bookService: BookService) {
 
     @Get(value = "/update", consumes = [MediaType.APPLICATION_FORM_URLENCODED], produces = ["text/html"])
     fun updateStart(@QueryValue isbn: String): ModelAndView<Any> {
-        println("isbn=${isbn}")
+
+        logger.info("isbn=${isbn}")
 
         var modelAndView = ModelAndView<Any>()
 
@@ -91,10 +110,7 @@ class BookController(val bookService: BookService) {
     @Post(value = "/update", consumes = [MediaType.APPLICATION_FORM_URLENCODED], produces = ["text/html"])
     fun updateExecute(isbn: String, release: Release, @RequestBean bookForm: BookForm): ModelAndView<Any> {
 
-        println("------------------------------------------------")
-        println("isbn: ${isbn}, release: ${release.name}")
-        println(bookForm)
-        println("------------------------------------------------")
+        logger.info("isbn=${isbn}, release=${release}, ${bookForm}")
 
         var updateAndMsg = bookService.updateTitleAndSalseDate(isbn, release, bookForm)
 

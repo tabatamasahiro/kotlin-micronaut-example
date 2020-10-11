@@ -2,16 +2,19 @@ package com.example.tabata.domain
 
 import com.example.tabata.controller.BookForm
 import com.example.tabata.repository.BookRepository
-import java.time.LocalDate
+import org.slf4j.LoggerFactory
 import java.util.*
 import javax.inject.Singleton
 
 @Singleton
 class BookService(val bookRepository: BookRepository) {
+    companion object {
+        private val logger = LoggerFactory.getLogger(BookService::class.java)
+    }
 
     fun saveNewBook(bookForm: BookForm): Pair<Update, String> {
 
-        print(bookForm)
+        logger.info("${bookForm}")
 
         var bookTitle = BookTitle.valueToUpdate(bookForm.title)
 
