@@ -16,6 +16,12 @@ class BookService(val bookRepository: BookRepository) {
 
         logger.info("${bookForm}")
 
+        var authorName = AuthorName.valueToUpdate(bookForm.author_name)
+
+        if (authorName.parseToSave() == Update.NG) {
+            return Pair(Update.NG, authorName.errorMsg)
+        }
+
         var bookTitle = BookTitle.valueToUpdate(bookForm.title)
 
         if (bookTitle.parseToSave() == Update.NG) {
