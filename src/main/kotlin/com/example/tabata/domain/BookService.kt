@@ -3,6 +3,7 @@ package com.example.tabata.domain
 import com.example.tabata.controller.BookForm
 import com.example.tabata.repository.BookRepository
 import org.slf4j.LoggerFactory
+import java.lang.RuntimeException
 import java.util.*
 import javax.inject.Singleton
 
@@ -11,6 +12,12 @@ class BookService(val bookRepository: BookRepository) {
     companion object {
         private val logger = LoggerFactory.getLogger(BookService::class.java)
     }
+
+    val MSG_INSERT_SUCCESS = "登録しました"
+    val MSG_UPDATE_SUCCESS = "更新しました"
+    val MSG_DELETE_SUCCESS = "削除しました"
+    val MSG_INSERT_ALREADY = "この著者はすでに登録されています"
+    val MSG_DELETE_ALREADY = "この著者はすでに削除されています"
 
     fun saveNewBook(bookForm: BookForm): Pair<Update, String> {
 
@@ -39,7 +46,7 @@ class BookService(val bookRepository: BookRepository) {
         var release = BookRelease.checkToDoRelase(salesDate, bookTitle)
 
         if (bookRepository.existsByAuthorNameAndTitle(bookForm.author_name, bookForm.title)) {
-            return Pair(Update.NG, "この著者はすでに登録されています")
+            return Pair(Update.NG, MSG_INSERT_ALREADY)
         }
 
 //        if (bookRepository.existsByAuthorNameAndTitleAndSalesDate(
@@ -50,7 +57,7 @@ class BookService(val bookRepository: BookRepository) {
         bookRepository.save(Book(UUID.randomUUID(), bookForm.author_name,
                 bookForm.title, release, salesDate.localDate))
 
-        return Pair(Update.OK, "登録しました")
+        return Pair(Update.OK, MSG_INSERT_SUCCESS)
     }
 
 
@@ -125,6 +132,16 @@ class BookService(val bookRepository: BookRepository) {
         }
 
         bookRepository.update(UUID.fromString(isbn), bookTitle.title, salesDate.localDate)
-        return Pair(Update.OK, "更新しました")
+        return Pair(Update.OK, MSG_UPDATE_SUCCESS)
+    }
+
+    fun deleteById(isbn: UUID): Pair<Update, BookAndMsg> {
+
+        if (bookRepository.existsById(isbn)) {
+            var book = bookRepository.findById(isbn)
+            bookRepository.deleteById(isbn)
+            return Pair(Update.OK, BookAndMsg(book, MSG_DELETE_SUCCESS))
+        }
+        return Pair(Update.NG, BookAndMsg(Optional.empty(), MSG_DELETE_ALREADY + "(${isbn.toString()})"))
     }
 }

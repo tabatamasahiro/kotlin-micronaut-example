@@ -30,12 +30,15 @@
 				<th>著者名</th>
 				<th>タイトル</th>
 				<th>発売日</th>
+				<th>更新</th>
+				<th>削除</th>
 			</tr>
 			<tr th:each="book: ${books}">
 				<td th:text="${book.authorName}"></td>
 				<td th:text="${book.title}"></td>
 				<td th:text="${book.salesDate}"></td>
-				<td><a th:href="|@{/book/update}?isbn=${book.isbn}|" target="_blank">更新/削除</a></td>
+				<td><a th:href="|@{/book/update}?isbn=${book.isbn}|" target="_blank">更新</a></td>
+				<td><a th:href="|@{/book/delete}?isbn=${book.isbn}|" target="_blank">削除</a></td>
 			</tr>
 		</table>
 	</span>

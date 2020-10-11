@@ -1,6 +1,7 @@
 package com.example.tabata.controller
 
 import com.example.tabata.Application
+import com.example.tabata.domain.BookAndMsg
 import com.example.tabata.domain.BookService
 import com.example.tabata.domain.Release
 import com.example.tabata.domain.Update
@@ -15,6 +16,7 @@ import io.micronaut.views.View
 import org.slf4j.LoggerFactory
 import java.nio.charset.Charset
 import java.nio.charset.Charset.defaultCharset
+import java.util.*
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletRequestWrapper
 import javax.servlet.http.HttpServletResponse
@@ -154,4 +156,19 @@ class BookController(val bookService: BookService) {
 //        return ""
 //    }
 
+    @Get(value = "/delete")
+    fun deleteStart(@QueryValue isbn: String): BookAndMsg {
+
+        logger.info("delete by isbn=${isbn}")
+
+        var pair = bookService.deleteById(UUID.fromString(isbn))
+
+        logger.info("${pair.first}, ${pair.second}")
+
+        if (pair.first == Update.OK) {
+            return pair.second
+        }
+
+        return pair.second
+    }
 }
