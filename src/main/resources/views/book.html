@@ -7,7 +7,7 @@
 <body>
 
 <form th:action="|@{/book}${crud}|" method="post">
-	<h1><span th:text="${page_sub_title}">新規登録</span></h1>
+	<h1><span th:text="${page_sub_title}">洋書新規登録</span></h1>
 	<span th:if="${msg!=null}">
 		<h3 style="color: red">
 			<span th:text="${msg}">ERROR</span>
@@ -15,7 +15,7 @@
 	</span>
 	著者名：<br>
 	<span th:if="${crud}=='/create'">
-		<input type="text" name="author_name" th:value="${author_name}" placeholder="必須" required><br>
+		<input type="text" name="author_name" th:value="${author_name}" placeholder="a-zA-Z0-9" required><br>
 	</span>
 	<span th:if="${crud}=='/update'">
 		<span th:text="${author_name}">toriyama akira</span><br>
