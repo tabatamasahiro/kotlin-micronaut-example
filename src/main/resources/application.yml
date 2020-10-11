@@ -1,6 +1,12 @@
 micronaut:
   application:
     name: otlinMicronautExample
+  views:
+    thymeleaf:
+      character-encoding: UTF-8
+  server:
+    tomcat:
+      uriencoding: UTF-8
 datasources:
   default:
     url: jdbc:h2:mem:devDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE

@@ -30,7 +30,10 @@
 	発売日：<br>
 	<input type="date" name="yyyymmdd" th:value="${yyyymmdd}"><br>
 	<br>
-	<input type="submit" name="送信">
+	<input type="submit" name="update" value="更新">
+	<span th:if="${crud}=='/update'">
+		<a href="search.html" th:href="@{/book/search}">戻る</a><br>
+	</span>
 </form>
 </body>
 </html>

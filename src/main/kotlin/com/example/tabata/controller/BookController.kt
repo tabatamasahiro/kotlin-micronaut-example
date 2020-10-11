@@ -13,6 +13,7 @@ import io.micronaut.http.annotation.*
 import io.micronaut.views.ModelAndView
 import io.micronaut.views.View
 import org.slf4j.LoggerFactory
+import java.nio.charset.Charset
 import java.nio.charset.Charset.defaultCharset
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletRequestWrapper
@@ -26,8 +27,8 @@ class BookController(val bookService: BookService) {
         private val logger = LoggerFactory.getLogger(BookController::class.java)
     }
 
-    val createMap = hashMapOf<String, String>("crud" to "/create", "page_sub_title" to "新刊登録")
-    val updateMap = hashMapOf<String, String>("crud" to "/update", "page_sub_title" to "書籍情報の変更")
+    val createMap = mutableMapOf<String, String>("crud" to "/create", "page_sub_title" to "新刊登録")
+    val updateMap = mutableMapOf<String, String>("crud" to "/update", "page_sub_title" to "書籍情報の変更")
 
     /**
      * ブラウザへ返却したhome.htmlがレンダリングされた
@@ -45,19 +46,21 @@ class BookController(val bookService: BookService) {
 
         var updateAndMsg = bookService.saveNewBook(bookForm)
 
-        var resultMap = mutableMapOf<String, String>()
+        var resultMap = mutableMapOf<String, String?>()
 
         logger.info("first=${updateAndMsg.first}, second=${updateAndMsg.second}")
 
-        if (updateAndMsg.first == Update.NG) {
-            resultMap.plus("author_name" to bookForm.author_name)
-            resultMap.plus("title" to bookForm.title)
-            resultMap.plus("yyyymmdd" to bookForm.yyyymmdd)
-        }
-        resultMap.plus("msg" to updateAndMsg.second)
-        resultMap.plus(createMap)
+        resultMap.put("msg", updateAndMsg.second)
 
-        return ModelAndView("book", resultMap)
+        if (updateAndMsg.first == Update.NG) {
+            resultMap.put("author_name", bookForm.author_name)
+            resultMap.put("title", bookForm.title)
+            resultMap.put("yyyymmdd", bookForm.yyyymmdd)
+            resultMap.putAll(createMap)
+            return ModelAndView("book", resultMap)
+        }
+
+        return ModelAndView("index", resultMap)
     }
 
     @Get(value = "/search", consumes = [MediaType.APPLICATION_FORM_URLENCODED], produces = ["text/html"])
@@ -90,6 +93,7 @@ class BookController(val bookService: BookService) {
         var optionalBook = bookService.findOne(isbn)
 
         var resutlMap = mutableMapOf<String, String?>()
+
         resutlMap.putAll(updateMap)
 
         if (optionalBook.isPresent) {
@@ -114,19 +118,40 @@ class BookController(val bookService: BookService) {
 
         var updateAndMsg = bookService.updateTitleAndSalseDate(isbn, release, bookForm)
 
+        logger.info("first=${updateAndMsg.first}, second=${updateAndMsg.second}")
+
         var resultMap = mutableMapOf<String, String?>("msg" to updateAndMsg.second)
 
-        resultMap.putAll(updateMap)
-
         if (updateAndMsg.first == Update.NG) {
+            logger.debug("book page")
+            resultMap.putAll(updateMap)
             resultMap.put("isbn", isbn)
             resultMap.put("title", bookForm.title)
             resultMap.put("author_name", bookForm.author_name)
             resultMap.put("yyyymmdd", bookForm.yyyymmdd)
             resultMap.put("release", release.name)
+            return ModelAndView("book", resultMap)
         }
 
-        return ModelAndView("book", resultMap)
+        logger.debug("search page")
+        return ModelAndView("search", resultMap)
     }
+
+//    fun utf8tosjis(value: String): String {
+//
+//        var strSjis = value.toByteArray(charset("UTF-8"))
+//
+//        var string = String(strSjis, charset("UTF-8"))
+//
+//        logger.info("string=${string}")
+//
+//        for (i in 0..strSjis.size - 1) {
+//            var c: Byte = strSjis[i]
+//            var s = "%X".format(c)
+//            logger.info("Sample:${s}")
+//        }
+//
+//        return ""
+//    }
 
 }

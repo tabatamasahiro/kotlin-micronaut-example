@@ -19,9 +19,10 @@
 	タイトル：<br>
 	<input type="text" name="title" th:value="${title}" placeholder="doragon ball"><br>
 	<br>
-	<!--	発売日：<br>-->
-	<!--	<input type="date" name="yyyymmdd" th:value="${yyyymmdd}"><br>-->
-	<!--	<br>-->
+	<br>
+	<input type="submit" name="search" value="検索">
+	<a href="index.html" th:href="@{/book/}">戻る</a><br>
+	<br>
 	<br>
 	<span th:if="${books != null}">
 		<table>
@@ -38,8 +39,6 @@
 			</tr>
 		</table>
 	</span>
-	<br>
-	<input type="submit" name="検索">
 </form>
 </body>
 </html>

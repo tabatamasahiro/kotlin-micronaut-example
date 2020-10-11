@@ -8,6 +8,11 @@
 <h1>
 	メニュー
 </h1>
+<span th:if="${msg!=null}">
+	<h3 style="color: red">
+		<span th:text="${msg}">ERROR</span>
+	</h3>
+</span>
 <ul>
 	<ui>
 		<a th:href="@{/book/create}" href="book.html" target="_blank">登録</a><br>
