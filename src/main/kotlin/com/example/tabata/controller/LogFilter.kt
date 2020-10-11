@@ -18,7 +18,8 @@ class LogFilter : HttpServerFilter {
 
     override fun doFilter(request: HttpRequest<*>?, chain: ServerFilterChain?): Publisher<MutableHttpResponse<*>> {
 
-        MDC.put("common", request?.uri.toString())
+        MDC.put("url", request?.uri.toString())
+        MDC.put("method", request?.methodName)
         logger.info("start")
         return chain!!.proceed(request)
 
