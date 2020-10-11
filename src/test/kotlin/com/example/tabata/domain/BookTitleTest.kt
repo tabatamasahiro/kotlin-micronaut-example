@@ -7,6 +7,17 @@ import org.junit.jupiter.api.Assertions.*
 internal class BookTitleTest {
 
     @Test
+    fun 出版まだ_タイトルを変更ByBlank() {
+
+        var bookTitle = BookTitle.valueToUpdate("")
+
+        var update = bookTitle.parseWithRelease(Release.NOT_ON_SALSE)
+
+        assertEquals(update, Update.OK)
+    }
+
+
+    @Test
     fun 出版済だとタイトルを変更NG() {
 
         var bookTitle = BookTitle.valueToUpdate("シンニホン")
@@ -18,9 +29,9 @@ internal class BookTitleTest {
     }
 
     @Test
-    fun 出版まだだとタイトル変更OK() {
+    fun 更新時_出版まだだとタイトル変更OK() {
 
-        val newTitle = "シンニホン"
+        val newTitle = "shin nihon"
 
         var bookTitle = BookTitle.valueToUpdate(newTitle)
 
@@ -30,13 +41,41 @@ internal class BookTitleTest {
         assertEquals(bookTitle.title, newTitle)
     }
 
+
     @Test
     fun insert時のParse() {
 
-        val newTitle = "シンニホン"
-
+        val newTitle = "Java"
         var bookTitle = BookTitle.valueToUpdate(newTitle)
 
         assertEquals(bookTitle.parseToSave(), Update.OK)
     }
+
+    @Test
+    fun insert時のParse2() {
+
+        val newTitle = "Java2"
+        var bookTitle = BookTitle.valueToUpdate(newTitle)
+
+        assertEquals(bookTitle.parseToSave(), Update.OK)
+    }
+
+    @Test
+    fun insert時のParse3() {
+
+        val newTitle = "Java 2"
+        var bookTitle = BookTitle.valueToUpdate(newTitle)
+
+        assertEquals(bookTitle.parseToSave(), Update.OK)
+    }
+
+    @Test
+    fun insert時のParseByBlank() {
+
+        val newTitle = ""
+        var bookTitle = BookTitle.valueToUpdate(newTitle)
+
+        assertEquals(bookTitle.parseToSave(), Update.OK)
+    }
+
 }
